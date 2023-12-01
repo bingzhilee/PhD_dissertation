@@ -1,0 +1,113 @@
+%\paragraph{Résumé (long) :} 
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé} 
+Les théories linguistiques supposent que la compétence linguistique humaine est fondée sur des structures innées et des représentations symboliques~\citep{chomsky1965aspects,chomsky1986knowledge}. Cependant, les modèles de langues basés sur le Transformeur, sans intégrer explicitement ces principes, ont atteint des performances comparables à celles de l'être humain dans de nombreuses tâches de traitement automatique de langues (TAL)~\citep{lertvittayakumjorn2021explanation,bubeck2023sparks}. Contrairement aux modèles traditionnels basés sur l’apprentissage supervisé et des représentations symboliques tels que les arbres syntaxiques, les Transformeurs apprennent leur représentation du langage directement à partir de textes bruts, sans guidance grammaticale. Ce succès remet en question l'importance des structures hiérarchiques en traitement du langage, et suscite également des interrogations sur les mécanismes qui sous-tendent la compétence linguistique des Transformeurs. Une question clé, qui est également le cœur de cette thèse, est de savoir si les Transformeurs construisent implicitement une forme de représentation hiérarchique abstraite.  La complexité de ces modèles, avec leurs nombreux paramètres, rend difficile la compréhension de leur fonctionnement interne. Bien que la recherche dans ce domaine soit en plein essor, l’étendue de la capacité d’abstraction linguistique des Transformeur reste une question ouverte. Certains travaux soulignent la compétence du modèle à capturer des nuances syntaxiques complexes, tandis que d’autres suggèrent une possible dépendance excessive à des régularités statistiques ou une simple mémorisation des données. Cette thèse vise à éclaircir si les Transformeurs représentent principalement des structures syntaxiques à travers des motifs de surface ou s'ils forment également des règles plus abstraites. En abordant cette question, nous cherchons à explorer les niveaux d'abstraction syntaxique que ces modèles peuvent atteindre et les mécanismes qui guident leurs prédictions. L'étude poursuit deux objectifs principaux : i) évaluer le potentiel d'un modèle de langue Transformeur autorégressif comme outil explicatif pour le traitement syntaxique humain ; ii) améliorer l'interprétabilité du modèle.
+
+Nous abordons ces objectifs en examinant les abstractions syntaxiques des modèles Transformeur sur deux niveaux : leur capacité à modéliser des structures hiérarchiques, présentée dans le Chapitre~\ref{chp:main_project}, et leur capacité à généraliser de manière compositionnelle les structures apprises, exposée dans le chapitre~\ref{chp:slog}. Ces deux aspects sont essentiels à la cognition linguistique humaine. Notre étude se concentre sur le modèle de langue Transformeur autorégressif, car son objectif de modélisation du langage est en phase avec la prédiction incrémentale des mots, caractéristique fondamental du traitement linguistique humain~\citep{hale2001probabilistic,kuperberg2016we,levy2008expectation}
+
+Nous avons introduit un cadre d'analyse intégré comprenant trois niveaux interdépendants: évaluation comportementale à travers des ensembles de test de défis, analyse représentationnelle à l'aide de sondes linguistiques, et analyse fonctionnelle par intervention causale. Dans le chapitre~\ref{chp:main_project}, nous avons déployé ce cadre pour mener une étude contrastive sur la capacité du modèle Transformer à représenter des structures hiérarchiques. L’étude se focalise sur deux phénomènes d’accord à longue distance en français : l'accord sujet-verbe à travers des propositions relatives (S-V désormais) illustré par (\ref{ex:agrS_abs}), et l'accord objet-participe passé (O-PP désormais) illustré par (\ref{ex:agrO_abs}).
+
+\setcounter{exx}{0} % Start numbering examples from 1
+\vspace{-0.8\baselineskip}
+\begin{exe}
+   \ex\label{ex:agrS_abs}
+    Les \textbf{chat·s} [ que Noûr aime bien
+  ]\textcolor{blue}{$_{RC}$} \textbf{jou·ent} dans le jardin. 
+  \vspace{-0.2\baselineskip}
+   \ex\label{ex:agrO_abs}
+   Les \textbf{chat·s} [ que Noûr a \textbf{adopté·s} ]\textcolor{blue}{$_{RC}$} sont mignons.
+\end{exe} 
+\vspace{-0.8\baselineskip}
+Bien que les phrases (\ref{ex:agrS_abs}) et (\ref{ex:agrO_abs}) semblent similaires en surface, elles diffèrent fondamentalement en théorie linguistique. La première concerne un accord sujet-verbe à travers une proposition relative, tandis que la seconde met en jeu un accord entre un antécédent dans la proposition principale et un participe passé dans la relative, ce qui la résolution d'anaphore et un mouvement. Nous cherchons à évaluer la capacité du Transformer à réaliser ces deux types d’accord et si ses représentations internes reflètent cette distinction linguistique.
+
+%\vspace{0.8\baselineskip}
+\noindent \textbf{Partie 1: La capacité du Transformeur à modéliser des structures hiérarchiques} 
+\vspace{-1.0\baselineskip}
+
+\paragraph{Évaluation comportementale} Pour évaluer le comportement syntaxique du modèle, nous avons extrait, à l’aide d’heuristiques simples, deux jeux de données d'évaluation à partir de corpus Gutenberg : un pour l'accord S-V (27 582 phrases) et un pour l'accord O-PP (68 794 phrases).
+Dans ces phénomènes, le nom qui détermine l'accord (soit le sujet, soit l'antécédent) est nommé \emph{indice}. Le verbe s'accordant avec cet \emph{indice} est la \emph{cible}. Le segment de phrase allant de l'\emph{indice} (y compris ses dépendants) jusqu'à la \emph{cible} (non incluse) est désignée comme le \emph{contexte}. Ces deux jeux de données contiennent des phrases avec au moins une proposition relative entre l'\emph{indice} et la \emph{cible}. Après avoir pré-entraîné le modèle de langue Transformeur sur un sous-ensemble de Wikipedia, nous avons évalué sa capacité syntaxique à l'aide de tâches d'accord en nombre. La tâche demande au modèle de prédire le mot suivant à partir d'un préfixe de phrase, comme dans l'exemple ``Les chats que Noûr a \_\_’’. Le modèle calcule alors une distribution de probabilités pour chaque mot du vocabulaire. Nous évaluons sa performance en comparant la probabilité qu'il donne au verbe correct ``adoptés’’ par rapport à la variante au singulier ``adopté’’. Si la forme correct a une probabilité plus élevée, le modèle est considéré comme ayant correctement accordé l'exemple.
+
+Alors que le modèle obtient une performance globale élevée (> 94\% de précision) pour les deux tâches d'accord, notre analyse (Section~\ref{sec:h_eval_protocol}) montre que des heuristiques simple (p. ex., accorder le verbe systématiquement avec le premier nom) peuvent produire des résultats comparables. Il est donc difficile de déterminer si le modèle s'appuie sur la structure syntaxique de la phrase ou sur des motifs superficiels. Pour évaluer cette capacité syntaxique au-delà des motifs superficielles, nous introduisons un protocole d'évaluation basé sur des heuristiques. D'abord, nous définissons cinq heuristiques de surface qu'un modèle statistique pourrait exploiter pour prédire le nombre du verbe à partir d'indices superficiels. Chacune suppose que le verbe cible s'accorde systématiquement en nombre avec :
+
+\vspace{-0.8\baselineskip}
+\begin{enumerate}[label=h\arabic*.]
+\item le mot le plus proche marqué pour le nombre grammatical ;
+\vspace{-0.5\baselineskip}
+\item le nom le plus proche ;
+\vspace{-0.5\baselineskip}
+\item le premier nom de la phrase ;
+\vspace{-0.5\baselineskip}
+\item le nombre majoritaire exprimé dans la séquence fournie au modèle ;
+\vspace{-0.5\baselineskip}
+\item le nom qui précède le \emph{que} le plus proche;
+\vspace{-0.5\baselineskip}
+\end{enumerate}
+\vspace{-0.5\baselineskip}
+
+\noindent Ensuite, nous utilisons ces heuristiques pour mesurer la difficulté de la prédiction d'accord. Pour chaque phrase de test, nous comptons combien d'heuristiques prédisent correctement la forme du verbe cible, puis nous répartissons notre ensemble de test en six sous-ensembles selon ce nombre. Plus il y a d'heuristiques qui correspondent, plus la tâche de prédiction est considérée comme facile. Dans la suite de cette thèse, nos analyses se focalisent sur les cas les plus complexes (sous-groupes d'heuristiques 0 et 1).
+
+
+Nos résultats montrent que la performance des modèles pour les deux tâches d'accord diminue avec la difficulté de la tâche. Toutefois, le Transformeur maintient une précision de 94\% dans le cas le plus difficile pour l'accord S-V et de 76\% pour l'accord O-PP. Cela met en évidence sa capacité à généraliser des informations syntaxiques au-delà des simples heuristiques. De plus, des expériences de contrôle confirment que le Transformer présente des généralisations grammaticales robustes, même en absence d’indices sémantiques et malgré un fort biais de fréquence, ce qui suggère qu'il satisfait au premier critère, la similarité comportementale, en tant qu'outil explicatif du traitement syntaxique humain.
+
+\vspace{-0.5\baselineskip}
+\paragraph{Analyse représentationnelle} Les évaluations comportementales montrent comment le modèle réagit à certains stimulis, mais elles offrent une vision limitée de ses représentations internes. Pour approfondir cette compréhension, dans la section~\ref{sec:probing_location},  nous avons utilisé des sondes linguistiques pour déterminer où les informations syntaxiques sont encodées dans le modèle et s'il utilise des représentations distinctes qui reflètent les nuances théoriques de chaque phénomène d'accord. Une sonde est un classifieur entraînés à prédire des propriétés linguistiques à partir des représentations générées par le modèle. Si le Transformer a bien capturé l'information sur l’accord, alors une sonde devrait pouvoir l’identifier dans ses représentations internes.
+
+Notre objectif est de déterminer quelles représentations de mots dans une phrase encodent le nombre grammatical de \emph{l'indice}. Pour ce faire, chaque phrase de nos jeux de données est associée à une étiquette indiquant le nombre de \emph{l'indice} (le sujet ou l'antécédent). La tâche est de prédire cette étiquette à partir des représentations de mots extraites de la dernière couche du Transformeur, en utilisant un classifieur de régression logistique. Nos résultats montrent que, pour les deux types d'accord étudiés, les informations requises pour prédire la forme correcte de la \emph{cible} sont principalement encodées dans tous les mots entre l'\emph{indice} (où le nombre de la \emph{cible} est spécifié) et la \emph{cible} (où l'information est «~utilisée~»).
+
+De plus, nous avons exploré la localisation de cette information sur l'accord dans l'espace de représentation du Transformeur. Pour ce faire, nous avons refait l'expérience de sondes linguistiques en utilisant cette fois des classifieurs logistiques régularisés $\ell_1$ pour sélectionner les caractéristiques pertinentes.  Les résultats révèlent que, pour les deux phénomènes étudiés, l’information sur l’accord est principalement encodée dans quelques dimensions fortement corrélées (moins de 10 sur 768). En outre, cette information est aussi diffusément présente, de manière redondante, dans les autres dimensions.
+
+
+\vspace{-0.5\baselineskip}
+\paragraph{Analyse fonctionnelle} 
+L'approche des sondes linguistiques révèle que le modèle encode de manière similaire des informations syntaxiques pour les deux types d'accord, mais elle ne met en évidence qu'une corrélation sans établir de causalité. Elle ne clarifie donc pas la manière dont le modèle mobilise ces informations encodées pour effectuer des prédictions d'accord.
+Pour combler cette lacune, dans la section~\ref{sec:causal}, nous avons introduit des interventions causales pour comprendre comment le Transformer utilise ces informations lors des prédictions d'accord et vérifier leur alignement avec les théories linguistiques établies.
+%Autrement dit, elle ne nous dit pas comment ces informations encodées sont effectivement utilisées par le modèle pour réaliser des prédictions d'accord. 
+% vérifier si cette utilisation est en phase avec les théories linguistiques 
+
+Les Transformeurs utilisent un mécanisme d'auto-attention pour construire une représentation contextualisée de chaque mot, en réalisant une somme pondérée des représentations des mots précédents. Pour étudier l'impact causal de mots spécifiques sur la prédiction d'accord à la position \emph{cible}, nous avons neutralisé leur contribution en coupant l'attention directe depuis la position \emph{cible} vers ces mots. En comparant les prédictions avant et après ces interventions, nous mesurons l'influence causale de certains mots sur la décision du modèle dans les tâches d’accord. 
+Nous reproduisons les mêmes tâches d'accord (\S\ref{sec:h_eval_protocol}) avec le Transformeur, mais cette fois, lors de la prédiction de la cible (et seulement à ce moment) nous supprimons l'attention directe depuis la cible vers :
+\vspace{-0.8\baselineskip}
+\begin{enumerate}[label=i\arabic*.]
+    \item L'\emph{indice} et ses dépendants;
+    \vspace{-0.5\baselineskip}
+    \item le pronom relatif \textit{que} dans le \emph{contexte};
+    \vspace{-0.5\baselineskip}
+    \item i1 et i2;
+    \vspace{-0.5\baselineskip}
+    \item tous les mots dans le \emph{contexte} sauf i1 et i2.
+    %\vspace{-0.3\baselineskip}
+\end{enumerate}
+\vspace{-0.8\baselineskip}
+Bien que les sondes linguistiques révèlent une distribution similaire de l’information syntaxique pour les deux phénomènes d’accord (\ref{sec:probing_location}), le Transformeur utilise ces informations de manière différente pour réaliser l'accord selon la tâche. Pour l’accord O-PP, l'antécédent et le pronom relatif ``que’’ sont déterminants dans la prédiction du modèle. Tandis que pour l'accord S-V, le sujet est important, mais le ``que" influence peu la prédiction. Cette distinction concorde avec les analyses linguistiques théoriques, soulignant l'adéquation représentationnelle du Transformeur pour la modélisation de l'information syntaxique.
+
+De plus, pour analyser l’impact des plongements positionnels sur la capacité d’abstraction syntaxique du modèle, nous avons réalisé des expériences d'ablation où nous avons retiré ces plongements de modèles Transformeur (autorégressif et bidirectionnel). Les résultats indiquent que ces plongements positionnels n’ont qu’un impact très limité sur la performance générale et la capacité d'abstraction syntaxique du Transformeur autorégressif. Cela est probablement dû à la capacité du modèle à inférer l'information sur l'ordre des mots via le masque d'attention incrémental.
+
+En conclusion du Chapitre~\ref{chp:main_project}, nos analyses montrent que le modèle réussit à capturer les structures hiérarchiques nécessaires à une généralisation fine, basée sur la grammaire. Son excellente performance, aussi bien dans les tâches comportementales que dans l'évaluation de l'adéquation de ses représentations, suggère que le Transformer autorégressif remplit les critères essentiels (\S\ref{sec:research_Q}) pour servir de modèle explicatif. En combinant cela avec notre cadre d'interprétabilité, le modèle Transformer se présente comme un outil prometteur pour étudier le traitement syntaxique humain.
+
+\vspace{0.5\baselineskip}
+\noindent  \textbf{Partie 2: La capacité du Transformeur à généraliser de manière compositionnelle les structures observées}
+%\textbf{Partie 2: Capacité de généralisation compositionnelle du Transformeur} 
+\vspace{0.8\baselineskip}
+
+Le Chapitre~\ref{chp:main_project} a démontré la capacité du Transformer à exploiter des relations syntaxiques pour prédire des dépendances à longue distance. Toutefois, il reste à élucider si cette généralisation syntaxique découle de sa capacité à combiner de manière compositionnelle des constituants vus lors de l'entraînement ou d'une mémorisation fondée sur des similarités structurelles. Le Chapitre~\ref{chp:slog} évalue si les Transformeurs peuvent appliquer les règles syntaxiques de manière compositionnelle pour interpréter de nouvelles structures linguistiques. Nous introduisons un test en parsing sémantique où les modèles doivent convertir des phrases anglaises en représentations sémantiques. Ce test présente une variation systématique entre les ensembles d'entraînement et d'évaluation, mettant en évidence la capacité du modèle à interpréter des structures non vues en recombinant des composants déjà rencontrés à l'entraînement. Par exemple, comme illustré dans (\ref{ex:abs_train_PP}), l'ensemble d’entraînement contient des propositions relatives (RC) modifiant des phrases nominales (NP) uniquement en position d'objet , tandis que l'ensemble d'évaluation teste la capacité à interpréter des RC modifiant le NP en position de sujet, comme dans (\ref{ex:abs_PP_subj}).
+\vspace{-0.3\baselineskip}
+\begin{exe}
+    \ex \label{ex:abs_train_PP} \textsc{Entrînement} 
+    \vspace{-0.3\baselineskip}
+    \begin{xlist}
+    \ex \label{ex:abs_train_PP_dobj} Emma saw [ the cat that the man held ]$_{\textcolor{blue}{obj}}$. 
+    \vspace{-0.3\baselineskip}
+    \ex The dog ran. 
+    \vspace{-0.3\baselineskip}
+    \ex \label{ex:abs_standalone_PP} the cat that the man held 
+    \end{xlist}
+    \vspace{-0.3\baselineskip}
+\ex \label{ex:abs_PP_subj} \textsc{Généralisation}
+ \\
+ \vspace{-0.3\baselineskip}
+\ [The cat that Emma saw]$_{\textcolor{blue}{subj}}$ ran. 
+\end{exe}
+\vspace{-0.5\baselineskip}
+En utilisant cet ensemble de tests, nous avons évalué la capacité de généralisation structurelle de divers modèles Transformer ainsi que d'un parser symbolique. Alors que tous les modèles interprètent correctement des phrases non vues mais avec des structures familières, les Transformers, y compris les plus récents, ont des difficultés avec des phrases présentant des dépendances plus longues ou une récursion plus profonde --- cas dans lesquels le parser symbolique est beaucoup plus performant. Cette différence, notable par rapport à la capacité humaine de généraliser en recombinant des structures familières, suggère que les modèles Transformeur pourraient s'appuyer sur des mécanismes sous-jacents différents ou insuffisants.
+
+Les conclusions contrastées du Chapitre~\ref{chp:main_project}, qui met en avant la compétence du modèle à approximer les structures hiérarchiques, et du Chapitre~\ref{chp:slog}, qui souligne sa capacité limitée à la généralisation compositionnelle, offrent une vision nuancée des capacités d'abstraction syntaxique des modèles Transformeur. Cela suggère qu'ils s'appuient principalement sur l'abstraction lexico-catégorielle et des analogies basées sur des similarités structurelles. Bien que cela leur permette de généraliser sur des phrases non vues avec des structures familières, gérant ainsi une forme sophistiquée de productivité grammaticale, ils peinent face à de nouvelles structures linguistiques qui nécessitent l'induction de règles compositionnelles systématiques. Dans l'ensemble, cette étude met en lumière à la fois les promesses et les limites potentielles des modèles Transformeur autoregressifs comme outils explicatifs pour le traitement syntaxique humain, tout en proposant un cadre méthodologique pour leur analyse et interprétabilité.

@@ -1,0 +1,146 @@
+\begin{figure}[H]
+\vspace{-3mm}  % reduce space above the figure
+\captionsetup[subfigure]{font=normalsize}
+%\captionsetup{width=0.98\textwidth}
+    \centering
+    \scalebox{0.78}{
+    \begin{subfigure}{0.9\textwidth}
+        \centering
+    \begin{forest}
+        for tree={s sep=5mm,, inner sep=0, l=0,} 
+        [,phantom,s sep=2.5cm
+        [  S 
+            [ NP [Emma]]
+            [ VP
+                [ V [saw ] ]
+                [ NP ,alias=o, tikz={\node [draw, dashed, white,fill=orange!30, fill opacity=0.20, fit=()(!1)(!l)]{}; }
+                     [the dog, roof]   
+                ]
+            ]
+        ]
+        [S , tikz={\node [draw, dashed,white,fill=blue!30, fill opacity=0.15, fit=()(!11)(!lll)]{};} 
+            [NP, alias=w, 
+                 [The cat, roof]      
+            ]
+            [VP, [V,alias=a,[ran, [,no edge] ]
+                 ]    
+            ]
+        ]
+        [S , tikz={\node [draw, dashed,white,fill=blue!20, fill opacity=0.15, fit=()(!11)(!lll)]{};} 
+            [NP,  tikz={\node [draw, dashed,white,fill=orange!30, fill opacity=0.25, fit=()(!1)(!l)]{};}
+                 [The dog, roof]      
+            ]
+            [VP,
+                [V, alias=b, [ran, [,no edge] ]
+                ]  
+            ]
+        ]
+        ]
+        \tikz[overlay] \node[] (plus) at ($(o)!.5!(w)$) {\scalebox{1.5}{+}};
+        \tikz[overlay] \node[] at ($(w)!.5!(b)$) {\scalebox{1.5}{$\leadsto$}};
+    \end{forest}
+    \caption{Lexical generalization: object $\rightarrow$ subject (COGS) } \label{fig:cogs_lex_gen}
+    \end{subfigure}}
+    \scalebox{0.75}{
+    \begin{subfigure}{0.9\textwidth}
+        \centering
+        \begin{forest}
+        for tree={s sep=2mm,, inner sep=0, l=0}
+        [,phantom,s sep=3cm
+        [S 
+            [NP [Emma]]
+            [VP
+                [V [saw ]]
+                [NP, tikz={\node [fill=green!30, fill opacity=0.25, fit=()(!1)(!l)]{};} 
+                    [NP,  [the dog, roof]]
+                    [PP, 
+                        [P [on]]
+                        [NP, alias=a,tikz={\node [fill=green!30, fill opacity=0.25, fit=()(!1)(!l)]{};}
+                            [NP,  [a mat, roof]]
+                            [PP,  [in a box, roof]]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+        [S 
+            [NP [Emma]]
+            [VP
+                [V [saw ]]
+                [NP, tikz={\node [fill=green!30, fill opacity=0.25, fit=()(!1)(!l)]{};} 
+                    [NP, alias=b, [the dog, roof]]
+                    [PP
+                        [P, [on]]
+                        [NP, tikz={\node [fill=green!30, fill opacity=0.25, fit=()(!1)(!l)]{};}
+                            [NP,  [a mat, roof]]
+                            [PP 
+                                [P [in]]
+                                [NP,tikz={\node [fill=green!30, fill opacity=0.25, fit=()(!1)(!l)]{};}
+                                    [NP, [a box, roof]]
+                                    [PP, [in a house, roof]]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+        ]
+    \tikz[overlay] \node[] at ($(a)!.5!(b)$) {\scalebox{1.5}{$\leadsto$}};
+    \end{forest}
+    \captionsetup{skip=2em} 
+    \caption{Structural generalization: deeper recursion depths (COGS \& SLOG) } \label{fig:cogs_struc_gen}
+    \end{subfigure}}
+        \scalebox{0.75}{
+    \begin{subfigure}{0.9\textwidth}
+        \centering
+    \begin{forest}
+        for tree={s sep=3mm,, inner sep=1, l=0}
+        [, phantom, s sep=2.5cm
+        [,phantom,s sep=3.5cm
+        [S 
+            [NP [Emma]]
+            [VP 
+                [V [saw ] ]
+                [NP , alias=o, tikz={\node [draw, dashed, white,fill=green!30, fill opacity=0.20, fit=()(!1)(!ll)]{};}
+                    [NP  [the dog, roof]]
+                    [RC ,alias=e, [that Max held \_, roof]   
+                    ]
+                ]
+            ]
+        ]
+        [S , tikz={\node [draw, dashed,white,fill=blue!30, fill opacity=0.15, fit=()(!11)(!lll)]{};} ,alias=h,
+            [NP , alias=w,
+                 [The cat, roof]  
+            ]
+            [VP
+                [V, [ran, [,no edge] ]
+                ] 
+            ]
+        ]
+        ]
+        [, phantom, s sep=2.5cm
+        [S, tikz={\node [draw, dashed,white,fill=blue!30, fill opacity=0.15, fit=()(!111)(!lll)]{};}
+            [NP , tikz={\node [fill=green!30, fill opacity=0.25, fit=()(!11)(!ll)]{};}
+                [NP, [The dog, roof]]
+                [ RC,alias=b,   [that Max saw \_, roof]
+                ]
+            ]
+            [VP
+                 [V, [ran, [,no edge] ]
+                ] 
+            ]
+        ]
+        ]
+        ]
+        \tikz[overlay] \node[] (plus) at ($(o)!.6!(w)$) {\scalebox{1.5}{+}};
+        \tikz[overlay] \node[] at ($(w)!.4!(b)$) {\scalebox{1.5}{$\leadsto$}};
+    \end{forest} 
+    \caption{Structural generalization: RC object $\rightarrow$ RC subject (SLOG) }  \label{fig:slog_struc_gen}
+    \end{subfigure}}
+    \caption{
+    Examples of lexical generalization in COGS --- (a), and structural generalization in COGS --- (b) and in SLOG --- (b, c). The SLOG task requires mapping the generalization examples to their logical forms; the corresponding logical forms are shown in Table~\ref{tab:cogs-lf}. 
+    }
+    \label{fig:lex_struc_gen}
+    \vspace{-3mm}
+\end{figure}

@@ -1,0 +1,41 @@
+
+
+
+
+
+\begin{table*}[htb!]
+    \small
+    \centering
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabularx}{\linewidth}{p{12mm}>{\raggedright\arraybackslash}X @{\hspace{0.7em}} >{\raggedright\arraybackslash}X}
+    \toprule
+        & \textbf{Training}  
+        & \textbf{Generalization} \\ 
+        \midrule
+        COGS
+         & (a)The cat \textbf{ran}. \newline $\leadsto$ \lform{*cat($x_1$); run.agent($x_2,x_1$)} \newline
+         Emma saw \textbf{the dog}.  \newline
+         $\leadsto$ \lform{*dog($x_3$);see.agent($x_1,$Emma) $\land$ see.theme($x_1, x_3$)} 
+         &  \textbf{The dog} ran. \newline
+        $\leadsto$ \lform{*dog($x_1$); run.agent($x_2,x_1$)} \\ 
+         %\cmidrule(l){2-3}
+         \midrule
+        \makecell[tc]{COGS \\ \&\\ SLOG} & (b) Emma saw the dog \textbf{on a mat in a box}.  \newline
+        $\leadsto$ \lform{*dog($x_3$);see.agent($x_1,$Emma) $\land$ see.theme($x_1, x_3$) dog.nmod.on($x_3,x_6$) $\land$ mat($x_6$) $\land$ mat.nmod.in($x_6,x_9$) $\land$ box($x_9$)} 
+         &  Emma saw the dog \textbf{on a mat in a box in a house}. \newline
+         $\leadsto$\lform{*dog($x_3$);see.agent($x_1,$Emma) $\land$ see.theme($x_1, x_3$) dog.nmod.on($x_3,x_6$) $\land$ mat($x_6$) $\land$ mat.nmod.in($x_6,x_9$) $\land$ box($x_9$) $\land$ box.nmod.in($x_9,x_{12}$) $\land$ house($x_{12}$)} \\ 
+        \midrule
+         SLOG 
+         &(c) The cat \textbf{ran}. \newline $\leadsto$ \lform{*cat($x_1$); run.agent($x_2,x_1$)}\newline
+         Emma saw \textbf{the dog that Max held}. \newline 
+         $\leadsto$ \lform{*dog($x_3$); see.agent($x_1,$Emma) $\land$ see.theme($x_1, x_3$) $\land$ dog.nmod($x_3,x_6$) $\land$ hold.agent($x_6,$Max) $\land$ hold.theme($x_6,x_3$)} 
+         
+         &  \textbf{The dog that Max saw} ran. \newline
+         $\leadsto$ \lform{*dog($x_1$); see.agent($x_4,$Max) $\land$ see.theme($x_4,x_1$) $\land$ dog.nmod($x_1,x_4$) $\land$ run.agent($x_5,x_1$)} \\ 
+         \bottomrule
+    \end{tabularx}
+    \caption{
+        Examples of two distinct types of generalization: lexical generalization in COGS --- (a), structural generalization in COGS---(b) and in SLOG --- (b, c). The symbol $\leadsto$ indicates the task of translating an English sentence into its corresponding meaning representation.
+    }\label{tab:cogs-lf}
+\end{table*}
+

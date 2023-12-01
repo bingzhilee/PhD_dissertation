@@ -1,0 +1,103 @@
+\chapter{Long-distance agreement in neural language models}\label{chp:NA_tasks}
+
+%\startcontents[chapters]
+
+
+After surveying the landscape of various approaches and diverse conclusions on the linguistic capacities of neural NLP models, we now move into a focused review of one widely used approach: long-distance agreement tasks. This approach provides a compelling lens through which to investigate the ability of neural models to capture syntactic structure. At its core, syntactic agreement is a fundamental aspect of syntax,  where certain sentence elements must align in features like number, gender, or person. Long-distance dependencies inherently require an understanding of how components in a sentence relate across spans of text, and crucially, morphological cues
+such as number and gender explicitly denote these long-term dependencies, offering a clear means to assess whether models effectively establish these connections.
+ 
+In this chapter, we present several key studies that used the long-distance agreement paradigm --- especially subject-verb agreement --- to evaluate the ability of neural language models to capture syntactic information. 
+
+
+Subject-verb agreement processing, a well-established paradigm in psycholinguistics, is commonly used to study human syntactic ability. Studies in this domain suggest that humans rely on hierarchical structures to ensure syntactic coherence~\citep{bockRegulatingMentalEnergy1992, BOCK199145, bockAttractionsVerbAgreement2001}. The work of \cite{elman89representation}, one of the first to analyze the syntactic capacity of neural networks, used the resolution of subject-verb agreement to demonstrate that a simple recurrent network is capable of encoding relevant grammatical relations and hierarchical structures in its distributed representation. This experimental approach, revitalized by the seminal work of \cite{linzen-etal-2016-assessing} (detailed in \S\ref{sec:behav_test}), has since been used in a tremendous number of works to explore the capacity of neural networks to capture abstract information about linguistic structures \citeti{wilcox-etal-2018-rnn,gulordava-etal-2018-colorless,giulianelli-etal-2018-hood,jumelet-etal-2019-analysing,lasri-etal-2022-probing}. 
+
+
+\paragraph{Naturalistic data} Using this paradigm, early studies~\citep{linzen-etal-2016-assessing,bernardy-lappin-2017-using} showed that RNN models could handle the subject-verb number agreement task when given explicit supervision. Lately, \cite{gulordava-etal-2018-colorless}, expanding on \cite{linzen-etal-2016-assessing}, revealed that an LSTM language model, pre-trained only to predict the next word in an unannotated corpus, could effectively handle long-distance agreement in an unsupervised manner. 
+
+Specifically, Gulordava and colleagues trained an LSTM language model on a corpus from Wikipedia with 100M tokens. This model was then tested on its ability to handle long-distance number agreements using sentences extracted from Universal Dependency treebanks. The evaluation method involves presenting the pre-trained model with sentence prefixes up to the target verb, and then comparing the probabilities that the model assigned to the singular and plural form of the target verb. For instance, in example (\ref{ex:compare_prob}), if the model predicts a higher probability for ``are'' over ``is'', it is deemed to have made the correct prediction for that sentence. Consequently, the overall accuracy for the agreement prediction task is calculated as the percentage of test instances in which the verb form with the higher probability is indeed the correct one.
+%\vspace{-0.5\baselineskip}
+\begin{exe}
+   \ex\label{ex:compare_prob}
+The old rusty keys to the cabinet \underline{\ \ \ }   \\
+$\mathbb{P}(\textrm{\bf are}|\textrm{prefix}) >
+      \mathbb{P}(\textrm{\bf is}|\textrm{prefix})$ $\Rightarrow$ predict ``are" 
+\end{exe}
+%\vspace{-0.5\baselineskip}
+
+\noindent Using this method, \cite{gulordava-etal-2018-colorless} showed that LSTM achieved high accuracy in various constructions in the four languages tested: English, Italian, Hebrew, and Russian. In the case of Italian, the authors also conducted experiments with human subjects. The performance of the LSTM language model was at pair with human performance. 
+
+Furthermore, Gulordava and colleagues introduced a control setting to ensure that the model did not use collocational information to determine the correct verb form. For instance, in the sentence “The cats on the mat meow loudly”, a language model may prefer the correct agreement by encoding information about what typically meows (cats) and what does not (mat), without relying on the target abstract structural rule. Such a confounding factor could overstate model success and raise questions about whether surface statistical patterns rather than the intended abstract syntactic information are driving performance. \cite{chomsky1957syntactic} claimed that grammaticality should be considered as a pure matter of syntax and structure, independent from semantic meaning or significance. Therefore, a sentence like ``Colorless green ideas sleep furiously'', despite being nonsensical, remains grammatically well-formed. If a model can capture the syntactic structure exemplified by agreement phenomena in naturalistic datasets, it should also be able to learn the syntactic constraints of nonsensical sentences. Inspired by this concept, Gulordava and colleagues also evaluated LSTMs on grammatically well-formed yet semantically implausible test instances, with the same number agreement prediction task.
+Specifically, a nonsensical evaluation set was created by replacing each content word of the original corpus-extracted sentence with a random word sharing the same PoS and
+morphological features:   
+%\vspace{-0.5\baselineskip}
+\begin{exe}
+   \ex\label{ex:nonce_ex}
+\textsc{Original}: The old rusty keys to the cabinet (are$/*$is) ...   \\
+\textsc{Nonce}: The colorless green ideas to the door (are$/*$is)... (paraphrasing Chomsky)
+\end{exe}
+%\vspace{-0.5\baselineskip}
+Their results showed that LSTM model's performance on nonsensical sentences was only slightly lower than on original ones; in Italian, this difference was just 6.6\%, a similar performance drop was observed in human subjects. This highlights model's ability to predict agreement in the absence of lexical or semantic cues and thus rules out the possibility that the LSTM decisions relied solely on surface information.
+
+\paragraph{Formal languages} Another way to isolate genuine syntactic processing from semantic information is to use formal languages. \cite{lakretz2021can} investigated RNN's ability to handle recursively nested subject-verb agreements, using artificial data generated by a PCFG. To illustrate, consider the example:
+\begin{exe}
+    \ex a2 a1 \textbf{n3[sg]} a5 a3 \textbf{n1[pl]} a2 a2 \textbf{v5[pl]} a4 a1 \textbf{v4[sg]} a2 a5
+\end{exe}
+Here, tokens starting with `a',`n' and`v' represent adjective-, noun- and verb-like tokens, respectively. Tokens marked with number information, highlighted in bold, ensure that nouns and verbs at each nested depth (in this case, depth$=2$) exhibit number agreement. The surrounding adjective-like tokens control dependency length, spanning two units in length on either side. Lakretz and colleagues created such training datasets, varying in terms of nested tree depths and dependency lengths. They then assessed RNN language models, trained with a language modeling objective, on subject-verb agreement tasks in controlled, incrementally challenging scenarios. Findings from this study indicated that while RNN language models could generalize to longer dependencies, they struggled with deeper tree structures.
+
+\paragraph{Synthetic data} Given the sparsity of complex syntactic sentences in treebanks~\citep{gulordava-etal-2018-colorless} and the limited scope of the formal language approach, which often explores specific syntactic facets in artificial settings, the use of synthetic data becomes an appealing alternative. \cite{marvin-linzen-2018-targeted} developed a template-based syntactic evaluation dataset, which features pairs of sentences, identical in all respects except for their grammaticality as shown in~(\ref{ex:sent_mini_pair}), targeting diverse structures-sensitive phenomena. In exploring the subject-verb agreement, their work delved into well-controlled challenging scenarios, where intervening elements such as prepositional phrases, relative clauses, or verb phrase coordination, separate the target subject and verb. For evaluation, instead of solely comparing the probability an LM assigns to a pair of words, they assessed the probabilities of entire sentences, determining if the model favored the grammatical over the ungrammatical sentence. 
+%\vspace{-0.5\baselineskip}
+\begin{exe}
+   \ex\label{ex:sent_mini_pair} $\mathbb{P}(\textrm{sentence a.}) \overset{?}{>}
+      \mathbb{P}(\textrm{sentence b.})$ \\
+\vspace{-0.8\baselineskip}
+\begin{enumerate}[label=\alph*.]
+    \item The farmer that the parents love swims.
+    \item \raisebox{0.8ex}{\textasteriskcentered}The farmer that the parents love swim.
+\end{enumerate}
+\end{exe}
+%\vspace{-0.5\baselineskip}
+
+\noindent This evaluation method extends to scenarios where multiple words may contribute to ungrammaticality, such as negative-polarity items. Their findings highlighted that while RNN language models excelled at local subject-verb agreements (i.e., no attractor), they exhibited sensitivity to specific lexical items and faced difficulties with rarer patterns, such as agreement across an object relative clause. Subsequent studies broadened the scope to include other phenomena considered by linguists to be sensitive to hierarchical structures, such as argument structure alternation, and filler-gap dependencies, as detailed in Section~\ref{sec:behav_test}.
+
+  
+\paragraph{Abstract representations} On the other hand, several studies have pointed out the limitations of relying solely on the agreement prediction approach to assess the representation of abstract syntactic structures by neural models. For instance, \cite{kuncoro2018perils} found that artificial neural networks may exploit spurious correlation in agreement tests without actually acquiring the desired syntactic competence: In the test set from \cite{linzen-etal-2016-assessing}, the agreement controller is the first noun in 80\% of sentences with multiple \textit{attractors}. This means that a simplistic heuristic, like agreeing with the first noun, can handle most of the complex agreement cases.
+
+In addition, \cite{newman-etal-2021-refining} raised concerns regarding the hand-crafted minimal pair setting commonly used in agreement prediction tasks. While evaluating models based on their agreement outputs does not provide insights on their internal representations, this minimal pair setting further limits this approach to systematically capture a model's syntactic behavior. For instance, when given the prefix ``The keys to the cabinet", the commonly used metric compares only one verb pair's probabilities: is/are, as illustrated in (\ref{ex:mini_pair_be}). However, this evaluation does not account for the model's overall probability distribution across vocabulary. So, even if a model correctly predicts ``are" for the \textit{be} pair, it could err in other contexts, such as favoring ``exists'' over ``exist'', as shown in (\ref{ex:mini_pair_exist}), when not restricted to choose specific verb forms. To assess the broader syntactic understanding of a model, complementary methodologies going beyond behavioral tests are required.
+
+\vspace{-0.5\baselineskip}
+\begin{exe}
+   \ex\label{ex:mini_pair}
+The keys to the cabinet \underline{\ \ \ }   \\
+\begin{xlist}
+    \vspace{-2ex}
+    \ex \label{ex:mini_pair_be} $\mathbb{P}(\textrm{\bf are}|\textrm{prefix}) >
+      \mathbb{P}(\textrm{\bf is}|\textrm{prefix})$ $\Rightarrow$ predict ``are", plural form \\
+      \vspace{-2ex}
+    \ex \label{ex:mini_pair_exist} $\mathbb{P}(\textrm{\bf exists}|\textrm{prefix}) >
+      \mathbb{P}(\textrm{\bf exist}|\textrm{prefix})$ $\Rightarrow$ predict ``exists", singular form 
+      %\vspace{-1.5ex}
+      \end{xlist}
+\end{exe}
+\vspace{-0.5\baselineskip}
+
+Delving deeper, another research strand has focused on exploring models internal representations and inner workings. \cite{giulianelli-etal-2018-hood} conducted one of the first studies to investigate mechanisms tracking subject-verb agreement in LSTMs. After replicating the number agreement experiments of \cite{gulordava-etal-2018-colorless}, they used probing classifiers~(\S\ref{sec:probing}) to analyze where and how LSTMs represented the agreement information:
+Classifiers were trained to predict the number information of the target subject (`singular' or `plural') from LSTM's internal representations for all tokens in a sentence. The results revealed that in sentences where the LSTM accurately predicted the verb, the classifiers could retrieve the agreement
+information with high accuracy. Intriguingly, in cases where the LSTM chose an ungrammatical verb, the error in number encoding occurred early on, long before the verb's appearance. Furthermore, the study used the gradients of the classifiers to rectify the model's internal states at the timestep when the classifier first detected incorrect number encoding. After this single intervention, the model showed a significant improvement in its number agreement predictions, indicating that such encoded information detected by probing classifiers directly influenced the LSTM model's predictions. 
+
+\cite{lakretz-etal-2019-emergence} investigated the neuron-level mechanisms within the RNN model of \cite{gulordava-etal-2018-colorless}, examining how the model processed long-distance agreement. Using neuron-level ablations, where specific neuron activations were set to 0, they assessed the impact of individual neurons on the model's syntactic performance. 
+Within the model, only two units were identified as responsible for encoding grammatical number for long-distance dependencies; deactivating these units caused the network's performance approach chance level. These two long-range ``number units'' were intricately connected to a distinct set of ``syntax units'' that encoded the syntactic structures. One such syntax unit was specialized in tracking the main subject-verb dependency, indicating when to store or erase number information within the long-range number units. On top of these structure-aware units, a set of short-range number units was identified, which determined agreement based on linear-distance --- the most recent noun. This interaction created a sparse mechanism, consisting of only three units for long-range agreement, which enables the model to carry the main subject's grammatical number over long distances. However, such a sparse mechanism makes nested long-range dependencies challenging. For example, in (\ref{ex:long_nested_s_v}),  after recording the outer dependency and number (keys, plural), the model lacked available long-range units. Thus, the agreement in the embedded clause agreement (man--holds) had to rely on short-range units, which can be misled by attractors. This deep dive into the RNN's agreement mechanism provides a foundation for comparative studies between the model's syntactic behavior and human cognition. It provides actionable hypotheses that can be tested to better understand human syntactic processing~\citep{lakretz2020limits,lakretz2021mechanisms}.
+\begin{exe}
+    \ex \label{ex:long_nested_s_v}  The \textbf{keys$_1$} [that the \textbf{man$_2$} near the \underline{cabinets} \textbf{holds$_2$} ] \textbf{are$_1$} rusty.
+\end{exe}
+
+
+\paragraph{Shift to Transformer-based models} The studies reviewed so far in this chapter have focused on RNN language models. As I began my thesis, Transformer-based models began to redefine the state-of-the-art in NLP and other fields, leading to a noticeable shift in the community's focus towards them. Consequently, in the realm of interpretability and explainability, a plethora of research has emerged to evaluate the linguistic capabilities of Transformer models. Among these investigations, the long-distance agreement task remains a popular tool to probe the structure-sensitive generalization capabilities of these Transformer models. 
+
+After BERT and GPT's impressive syntactic capabilities  were confirmed by replicating the agreement experiments of ~\cite{linzen-etal-2016-assessing} and ~\cite{gulordava-etal-2018-colorless} in studies like ~\cite{goldberg19assessing} and ~\cite{wolf2019some}, later research aimed to uncover the mechanisms behind these models' proficiency in handling long-distance dependencies. For instance, many studies, ours included, applied causal intervention analysis on Transformer models to uncover their strategies for resolving long-distance agreements~\citep{finlayson-etal-2021-causal,lasri-etal-2022-probing,li-etal-2022-distributed}. Others explored how subject-verb agreement resolution in Transformers was influenced by factors independent of structure, examining frequency effects as in ~\cite{wei-etal-2021-frequency}, lexical information as in \cite{lasri-etal-2022-bert} and surface heuristics as in our work~\cite{li-etal-2021-transformers}. 
+
+
+More recent research has expanded beyond English, with numerous studies assessing Transformer models on non-English linguistic structures, leading to varied conclusions about their syntactic capabilities. For example, \cite{guarasci2023assessing} evaluated BERT's ability to learn Italian syntax, and \cite{de-dios-flores-etal-2023-dependency} probed BERT's understanding of control dependencies in Spanish and Galician, highlighting model's difficulty with non-adjacent dependencies. Meanwhile, many non-English challenge sets have also been introduced. For instance \cite{wilkens2023assessing} developed a dataset for Brazilian Portuguese that included various grammatical structures, in particular agreement phenomena. \cite{someya-oseki-2023-jblimp} introduced the Japanese benchmark of linguistic minimal pairs, covering 11 intricate linguistic phenomena, and highlighted challenges in verbal agreement and binding. \cite{an-etal-2023-blm} crafted a French synthetic benchmark for subject-verb agreement, modeling it after a visual pattern detection task inspired by ~\cite{raven1941standardization}.
+
+
+In this chapter, I have outlined several key studies\footnote{It is worth noting that this overview is not exhaustive, recently, this field has seen numerous follow-up studies and related work that I have not been able to cite or detail extensively.} that employ the long-distance agreement task to assess the ability of neural language models to capture syntactic information. Their methodologies and diverse conclusions form the premise of the following chapter, in which we combine challenge sets, probing classifiers, and causal interventions to investigate the mechanisms tracking long-distance agreement in an autoregressive Transformer language model. 
+

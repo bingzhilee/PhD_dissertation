@@ -1,0 +1,262 @@
+\documentclass[12pt,oneside]{book} %replace twoside to temporarily rm empty pages
+\usepackage{natbib}
+
+
+
+%\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[a4paper,left=3cm,right=2.5cm,top=3cm,bottom=3cm]{geometry} % , twoside
+\usepackage{xcolor}
+\usepackage{stmaryrd}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{libertine}
+\usepackage[pdftex]{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{apalike}
+\usepackage{minitoc}
+\usepackage{acronym}
+
+\usepackage[inline]{enumitem}
+\usepackage{epigraph}
+\usepackage{etoolbox} % rm sections titles of appendix in the ToC 
+
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.multipart, positioning, fit, calc, decorations.pathreplacing} % to illustrat abstract causal model
+\usepackage{tikz-qtree}
+\usetikzlibrary{tikzmark,calc}
+\usepackage{lscape}
+\usepackage{titletoc}
+\usepackage{booktabs}
+\usepackage{arydshln}
+\usepackage[nonumberlist]{glossaries}
+\usepackage{calc}
+\usepackage[]{titlesec} 
+\definecolor{linkColor}{HTML}{32a852}
+
+\usepackage[colorlinks=true,citecolor=gray!80!blue!80,linkcolor= black,urlcolor=black]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{lipsum}
+\usepackage{tikz-dependency}
+
+\pgfdeclarelayer{depgroups} %explicitly defining the layer 
+\pgfsetlayers{main,depgroups} % to resolve the depgroups no shown issue for figure 4.8
+\usepackage{tabu}
+\usepackage{setspace} % change the interline spacing to 1.5
+\usepackage{gb4e} \noautomath % linguistic examples
+\usepackage{xspace}
+\usepackage{pifont} % for checkmark and cross
+\usepackage{makecell} % for results table
+\usepackage{inconsolata} %improve the aesthetics of text in the typewriter font.
+\usepackage{comment}
+\usepackage{microtype} % help reduce the occurrence of overfull hbox warnings. It makes subtle adjustments to the size and spacing of characters and words which can often help the paragraph to fit within the margins.
+
+\usetikzlibrary{decorations.markings} %add a ban sign at the middle of the path
+\usepackage{pifont} % use the \ding{55}
+\usepackage[scr=rsfs]{mathalpha}
+
+\tikzset{ban/.style={
+  postaction=decorate,
+  decoration={
+    markings,
+    mark=at position 0.5 with {\node[red,xscale=1.5,yscale=1.5,font=\Large] {\ding{55}};}
+  }
+}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{yourcolor}{HTML}{8a0e19}%{008bb2}
+
+\titleformat{\chapter}[display]
+{\normalfont\color{yourcolor}}
+{\filleft\huge\color{black}\textsc\chaptertitlename\hspace*{2mm}%
+	\begin{tikzpicture}[baseline={([yshift=-.6ex]current bounding box.center)}]
+	\node[fill=yourcolor,circle,text=white] {\thechapter};
+	\end{tikzpicture}
+}
+{1ex}
+{\titlerule[1.5pt]\vspace*{1.5ex}\Huge\color{black}\textsc}
+[]
+
+\titleformat{name=\chapter,numberless}[display]
+{\normalfont\color{black}}
+{}
+{1ex}
+{\vspace*{-5cm}\Huge\textsc}
+[]
+
+%command to print the acutal minitoc
+\newcommand{\printmyminitoc}[1]{%
+	\noindent\hspace{1cm}%
+	\colorlet{chpnumbercolor}{black}%
+	\begin{tikzpicture}
+	\node(s){
+		\begin{minipage}{.9\linewidth}%minipage trick
+		\printcontents[chapters]{}{1}{}
+		\end{minipage}
+	};
+	{
+		\color{yourcolor}
+		\draw(s.north west)--(s.north east) (s.south west)--(s.south east);
+	}
+	\end{tikzpicture}
+	\vspace*{3ex}
+	
+	#1
+	\vfill
+	\pagebreak
+}
+
+
+\newcommand{\HRule}{\rule{\linewidth}{0.7mm}}
+\newcommand{\Hrule}{\rule{\linewidth}{0.3mm}}
+
+
+\newcommand{\mycomment}[1]{}
+\input{macros} % more \usepackage commands and defining our own commands
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\onehalfspacing
+%\doublespacing
+\begin{document}
+
+%\mycomment{
+	\begin{titlepage}
+		\begin{center}
+			\begin{tabular}{c@{\hskip 3cm}c}
+				\includegraphics[height=2cm]{images/uparis-logo-texte.png} &
+				\includegraphics[height=2cm]{images/LLF_logo.png}\\
+			\end{tabular}
+		\end{center}
+	
+		
+		\begin{center}
+
+			{\Large Université Paris Cité}\\
+             École doctorale Sciences du Language (ED 622)   \\
+			Laboratoire de Linguistique Formelle (LLF)
+  
+  			\vfill
+  			
+	 		\HRule \\[0.1cm]
+	 		 { \Large \bfseries Study of the Abstraction Capabilities of Neural Language Models%Étude des capacités abstractives de modèles de langue neuronaux	 
+            }
+	  		\Hrule \\
+		
+		\end{center}
+		
+		\vfill
+			
+		\begin{center}
+			Par \textsc{\Large Bingzhi LI}\\[1cm] 
+			{\fontsize{14}{14}\selectfont Thèse de doctorat de SCIENCES DU LANGUAGE} 
+            \\[1cm]
+           {\large Dirigée par Benoît CRABBÉ \\
+            Et co-encadrée par Guillaume WISNIEWSKI } \\ [1cm]
+            {\fontsize{14}{14}\selectfont Présentée et soutenue publiquement le 28 novembre 2023}\\
+			\vspace{1cm}
+		\end{center}
+  
+		\begin{center}
+        \begin{tabular}{l}
+        {\fontsize{14}{14}\selectfont Devant un jury composé de: }\\
+        \\
+        Thierry \textsc{POIBEAU}, \textsc{DR}, CNRS, ENS-PSL et Université Sorbonne Nouvelle, rapporteur \\
+        François \textsc{YVON}, \textsc{DR}, CNRS et Sorbonne Université, rapporteur \\
+        Barbara \textsc{HEMFORTH}, \textsc{DR}, CNRS et Université Paris Cité, examinatrice \\
+        Dieuwke \textsc{HUPKES}, PhD, Meta AI, examinatrice  \\
+        Benoît \textsc{CRABBÉ}, \textsc{PR}, Université Paris Cité, directeur de thèse \\
+        Guillaume \textsc{WISNIEWSKI}, \textsc{MCF}, Université Paris Cité, co-encadrant de thèse
+        \end{tabular}
+         \end{center}
+	\newpage
+	\end{titlepage}
+%}
+\pagestyle{fancy}
+
+\fancyhead{}
+
+\renewcommand{\chaptermark}[1]{\markboth{\textsc{#1}}{}}
+
+
+\frontmatter
+
+
+        
+\clearpage %Ends the current page
+\phantomsection % Creates a new anchor
+\addcontentsline{toc}{chapter}{Abstract} % % Adds the Abstract to the ToC, now pointing to the new anchor
+\input{Chapters/abstract}
+
+\input{Chapters/acknowledge}
+
+
+\tableofcontents
+%\addcontentsline{toc}{chapter}{Contents}
+\clearpage
+\listoffigures
+\addcontentsline{toc}{chapter}{List of figures}
+
+\clearpage
+\listoftables
+\addcontentsline{toc}{chapter}{List of tables}
+\input{Chapters/acronym_list}
+
+\mainmatter
+
+\setlength{\parskip}{.7em}
+
+\titlespacing*{\section}{0pt}{.9em}{.8em}
+\renewcommand{\baselinestretch}{1.1}
+
+
+
+\newcommand{\bcomment}[2]{ {\color{red} #1}  {\color{blue} #2}}
+\newcommand{\bingzhi}[1]{\textcolor{teal}{#1}}
+
+\newcommand{\alert}[1]{\textcolor{blue}{\textbf{#1}}}
+\newcommand{\cue}{\textbf{cue}\xspace}
+\newcommand{\target}{\textbf{target}\xspace}
+\newcommand{\exactmatch}[1]{{\textcolor{gray}{#1}}}
+%\newcommand{\citeti}[1]{\citep{#1}\textcolor{gray}{; i.a.}}
+\newcommand{\citeti}[1]{\citep[\textcolor{gray}{; i.a.}]{#1}}
+\newcommand{\ivec}[1]{{\mathbf #1}} % for formular in probing components 
+
+\input{Chapters/introduction.tex}
+
+\part{Background}
+\input{Chapters/chapter02.tex}
+
+\part{Assessing model capacity to represent syntactic structures }
+\input{Chapters/chapter03.tex}
+\input{Chapters/chapter04.tex}
+
+\part{Assessing model capacity to generalize compositionally observed structures }
+\input{Chapters/chapter05.tex}
+\part{Conclusion}
+\input{Chapters/conclusion.tex}
+
+% Add the bibliography to the table of contents as a chapter
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{anthology,custom}
+\bibliographystyle{acl_natbib}
+
+
+\input{Chapters/résumé_long}
+ 
+
+
+\input{Chapters/appendix.tex}
+
+\end{document}
+
+%unresolved issue: the "Bibliography" and "Appendix" are now included under the last \part in my table of contents: consider using a combination of the \phantomsection and \addcontentsline commands. (# but this still doesn't work)

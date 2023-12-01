@@ -1,0 +1,192 @@
+%% Additional packages and commands to be placed in the preamble
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{framed} %% debugging: boxes around figures to determine their size
+%\usepackage{caption} % probably already loaded in emnlp2021.sty
+% PW: is it allowed to descrease size between image and caption? \captionsetup[figure]{skip=5pt} % default is 10pt?
+\usepackage{subcaption}  %% needed to have subfigures
+\usepackage{tabularx}  %% X column for tables: automatic line breaks
+\usepackage{booktabs}  %% nice tables: \toprule, \bottomrule, \midrule
+\usepackage{multirow}  %% multirow in table with \multirow{number rows}{width}{text}
+%\usepackage{tablefootnote}  %% for footnote to work in tables \tablefootnote[...]{...}
+
+% make siunitx and gb4e work together: https://tex.stackexchange.com/questions/364163/incompatibility-between-siunitx-and-gb4e
+\makeatletter
+\def\new@fontshape{}
+\makeatother
+\usepackage{siunitx} %% formatting numbers/units. used in appendix for detailed eval results formatting
+
+\usepackage{xspace}  % \xspace command. add space after newcommand or don't (context-dependent) 
+%% define font to be one point smaller (used for lform in typewriter) see https://tex.stackexchange.com/a/365025
+%\makeatletter
+%\newcommand{\oneptsmaller}[1]{%
+%  \begingroup
+%  \fontsize{\dimexpr\f@size pt-1pt}{\f@baselineskip}\selectfont
+%  #1%
+%  \endgroup
+%}
+%\makeatother
+
+\usepackage{tikz}  %% drawing
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{calc, positioning}  % for bars in table
+\usepackage{forest}  %% drawing linguistic trees: used for AM algebra figure: the AM term and the AM dep-tree and also for the PPrecursion/subjPP trees
+\useforestlibrary{linguistics}
+\forestapplylibrarydefaults{linguistics}
+
+\usepackage{stmaryrd} %% denotation brackets (Lucia)
+
+\usepackage[compress,sort,capitalise]{cleveref}  %% automatically insert type of reference: Figure/Table/Section...
+  %% NB: should be placed after hyperref is loaded
+\usepackage{hyperref}
+\usepackage{float}
+
+\usepackage[inline]{enumitem}  %% customizing enumerations/lists: label=(\arabic*) or \Alph* ... or \roman*  , inliste list with starred version of normal lists: \begin{enumerate*}
+
+\usepackage{gb4e}  % for linguistic examples \begin{exe} \ex example1 \ex example 2 \end{exe}
+  %% ATTENTION: allows _ and ^ in ordinary text: can conflict with other commands/packages! 
+  %% therefore use \noautomath directly after package loaded. see also https://tex.stackexchange.com/q/101300
+\noautomath
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Defining own commands
+\newcommand{\todocite}{\todo{citation!}}
+\newcommand{\sortof}[1]{`#1'}
+%\newcommand{\lform}[1]{{\fontfamily{cmtt}\selectfont #1}}
+\newcommand{\lform}[1]{\texttt{#1}}
+%\newcommand{\lform}[1]{\oneptsmaller{\texttt{#1}}}
+%\newcommand{\graphedge}[1]{\textsl{#1}}
+\newcommand{\graphedge}[1]{`#1'}
+\newcommand{\graphnode}[1]{`#1'}
+\newcommand{\word}[1]{``#1''}
+\newcommand{\phrase}[1]{``#1''}
+\newcommand{\sentence}[1]{``#1''}
+
+%\crefname{section}{sec.}{secs.} % see page 14 (sec 8.1.2) in the cleveref documentation
+%\crefname{section}{tab.}{tabs.}
+% make cleverref aware of examples and cite them with sourrounding parenthesis: see https://tex.stackexchange.com/a/318983
+% if we can't use cleveref we could define a command \newcommand{\pref}[1]{(\ref{#1})} like suggested in https://tex.stackexchange.com/a/211871
+\crefname{xnumi}{}{}
+\creflabelformat{xnumi}{(#2#1#3)}
+\crefrangeformat{xnumi}{(#3#1#4)--(#5#2#6)}
+
+% tikz node and edge style for graphs
+%  normal node
+\tikzstyle{nnode} = [ellipse, text centered, draw=black, inner sep=2pt] %, outer sep=0pt
+%  determiner node
+\tikzstyle{dnode} = [rectangle, rounded corners, text centered, draw=black] % minimum width=3cm, minimum height=1cm, , fill=red!30
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+% for reference: the color values used in lindeman-etal-2019-compositional
+%\colorlet{colorwant}{green!30}
+%\colorlet{colorboy}{brown!10!yellow!60}
+%\colorlet{colorthe}{blue!30}
+%\colorlet{colorgo}{red!30}
+% new colors should help colorblind, but actually more an excuse, just wanted to experiment with colors ;) - pw
+\definecolor{colorwant}{HTML}{ABBEF1} % lighter blue tone
+\definecolor{colorgo}{HTML}{DE8BB3} % red-pink tone
+\definecolor{colorthe}{HTML}{F1AD83} % light orange tone
+\definecolor{colorboy}{HTML}{FFE19D} % light yellow tone
+
+% AM algebra things: %%%%%%%%%%%
+\newcommand{\sources}{\ensuremath{\mathcal{S}}}
+\newcommand{\tp}[1]{\ensuremath{\tau(#1)}}   % type variable
+\newcommand{\type}[1]{\ensuremath{[#1]}}
+
+\newcommand{\app}[1]{\text{\textsc{App}}\ensuremath{_{#1}}\xspace}
+\newcommand{\modify}[1]{\text{\textsc{mod}}\ensuremath{_{#1}}\xspace}
+\newcommand{\lignore}{\text{\textsc{ignore}}}
+\newcommand{\of}[1]{\left(#1\right)}
+
+% source
+\newcommand{\src}[1]{\text{\textsc{#1}}\xspace} % source name 
+%\newcommand{\obj}[1][]{\text{\src{o}}\ensuremath{_{#1}}} % object sources. \obj or \obj[i]
+\newcommand{\subj}{\text{\src{s}}} % subject source, just \subj
+% \newcommand{\op}[1][i]{\text{\src{op}}\ensuremath{_{#1}}} % op sources \op[i]
+\newcommand{\rt}{\src{rt}} % root source
+% with color red:
+\newcommand{\srcr}[1]{\textcolor{red}{\src{#1}}} % source name 
+
+\newcommand{\G}[1]{\ensuremath{G_{\text{#1}}}} % naming graphs
+
+
+%% Colored bars as background in tables using \asbar
+% this is based on TeX code found on arXiv for the Ontanon et al paper: https://arxiv.org/abs/2108.04378
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{main}
+\pgfsetlayers{background,main}
+\newcommand*{\minWidth}{25}  % controls size of total box
+\newcommand*{\maxValue}{100}
+\newcommand{\makeBar}[3]{%
+  \tikz[baseline]{
+    \node[anchor=base,text width=\minWidth,align=#2,inner sep=0pt,inner xsep=4pt,outer sep=0pt] (n) {\strut{\hfill#1}};  % ,draw=black % \hfill makes numbers right-aligned
+    \begin{pgfonlayer}{background}
+        {
+       \edef\color{#3}
+       \pgfmathparse{abs(#1/\maxValue)}
+       \edef\contents{{\pgfmathresult}}
+       \fill[font=\boldmath,color=\color] (n.north west) rectangle ($(n.south west)!{{\contents}}!(n.south east)$);  %% that's the box for the actual percentage
+       \fill[font=\boldmath,color=cyan!10] ($(n.north west)!{{\contents}}!(n.north east)$) rectangle (n.south east);  % that's the box for the rest
+       }
+    \end{pgfonlayer}
+  }
+}
+\newcommand{\asbar}[1]{\makeBar{#1}{center}{cyan!25}}
+\newcommand{\stderr}[1]{\tiny$\pm$#1}
+% \newcommand{\stderr}[1]{\footnotesize{$\pm$#1}}
+\newcommand{\pmgray}{\textcolor{gray}{$\pm$}}  % sign in between columns separating mean and standard dev
+
+% Class names 'Lexicalized'/'ObjProper'/'Structural'
+\newcommand{\genclass}[1]{\textsc{#1}\xspace} % 
+\newcommand{\lexg}{\genclass{Lex}}
+\newcommand{\propg}{\genclass{Prop}}
+\newcommand{\structg}{\genclass{Struct}}
+
+% how should we call AM parser models with and without BERT?
+% NOTE: don't forget to change it in the recursion depth plot too!!!
+\newcommand{\amBert}{AM+B} %AM+BERT  
+\newcommand{\amToken}{AM} %AM-BERT aka AM Token
+\newcommand{\dist}{dist\xspace} %with distance info added
+
+\newcommand{\oldNumber}[1]{\textcolor{black!40}{#1}}
+
+% Author comments
+\usepackage{color}
+\newcommand\bmmax{0} % magic to avoid 'too many math alphabets' error
+\usepackage{bm}
+\definecolor{orange}{rgb}{1,0.5,0}
+\definecolor{mdgreen}{rgb}{0.05,0.6,0.05}
+\definecolor{mdblue}{rgb}{0,0,0.7}
+\definecolor{dkblue}{rgb}{0,0,0.5}
+\definecolor{dkgray}{rgb}{0.3,0.3,0.3}
+\definecolor{slate}{rgb}{0.25,0.25,0.4}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{ltgray}{rgb}{0.7,0.7,0.7}
+\definecolor{purple}{rgb}{0.7,0,1.0}
+\definecolor{lavender}{rgb}{0.65,0.55,1.0}
+\definecolor{brown}{rgb}{0.6,0.2,0.2}
+
+\newcommand{\ensuretext}[1]{#1}
+\newcommand{\ldmarker}{\ensuretext{\textcolor{purple}{\ensuremath{^{\textsc{L}}_{\textsc{D}}}}}}
+\newcommand{\pwmarker}{\ensuretext{\textcolor{magenta}{\ensuremath{^{\textsc{P}}_{\textsc{W}}}}}}
+\newcommand{\yymarker}{\ensuretext{\textcolor{mdgreen}{\ensuremath{^{\textsc{Y}}_{\textsc{Y}}}}}}
+\newcommand{\jgmarker}{\ensuretext{\textcolor{orange}{\ensuremath{^{\textsc{J}}_{\textsc{G}}}}}}
+\newcommand{\akmarker}{\ensuretext{\textcolor{blue}{\ensuremath{^{\textsc{A}}_{\textsc{K}}}}}}
+\newcommand{\codemarker}{\ensuretext{\textcolor{brown}{CODE}}}
+
+
+\newcommand{\arkcomment}[3]{\ensuretext{\textcolor{#3}{[#1 #2]}}}
+%\renewcommand{\arkcomment}[3]{}
+%\renewcommand{\todo}[1]{}
+\newcommand{\ld}[1]{\arkcomment{\ldmarker}{#1}{purple}}
+\newcommand{\pw}[1]{\arkcomment{\pwmarker}{#1}{magenta}}
+\newcommand{\yy}[1]{\arkcomment{\yymarker}{#1}{mdgreen}}
+\newcommand{\jg}[1]{\arkcomment{\jgmarker}{#1}{orange}}
+\newcommand{\ak}[1]{\arkcomment{\akmarker}{#1}{blue}}
+\newcommand{\code}[1]{}%\arkcomment{\codemarker}{#1}{brown}}% marks discrepancies between text and code. Change this to {} for print version
+
+
+\newcommand{\ignore}[1]{}

@@ -1,0 +1,141 @@
+\chapter{Introduction}
+%\startcontents[chapters]
+%\addcontentsline{toc}{chapter}{Introduction}  
+
+Human beings possess a remarkable capacity for abstraction and generalization, especially evident in our linguistic competence. Traditional linguistic theories suggest that human linguistic competence is rooted in complex built-in structures and symbolic processing~\citep{chomsky1965aspects,chomsky1986knowledge,pinker1988language}. These theories emphasize that language has a hierarchical structure, where larger linguistic structures are recursively constructed from smaller components. This recursive construction enables us to generate a large, potentially infinite number of sentences from a limited set of input elements~\citep{hauser2002faculty}. The principle of compositionality bridges the syntactic structures to semantic understanding. It posits that the meaning of a sentence depends on the meanings of its parts and how they are syntactically combined~\citep{frege_1892, partee1984compositionality}, underpinning the immense productivity of language and our ability to understand numerous sentences, even those never encountered before.
+
+
+Recent artificial \ac{NNs} have achieved human-comparable performance in many \ac{NLP} tasks, ranging from machine translation to reading comprehension~\citep{bubeck2023sparks}. Impressively, Transformer-based language models can generate apparently coherent and human-like grammatical text, appearing to possess an effective grasp of linguistic structures~\citep{brown2020language,openai2023gpt4}. Unlike traditional NLP models that rely on supervised learning and symbolic representations like parse trees or logical formulas~\citep{jurafsky2000speech}, the Transformer architecture does not explicitly model hierarchical structures and does not manipulate symbols. Instead, Transformers use matrix operations and non-linear transformations, processing information simultaneously. This allows them to perform tasks such as sentence completion by predicting what comes in the next slot given the prefix of a sentence~\citep{elman1990finding,NIPS2017_3f5ee243}. During this process, they learn to encode words and sentences into vectors directly from raw text without any grammatical guidance. These vector-based representations of language, known as word or sentence embeddings, are now central to most NLP tasks and have demonstrated remarkable efficacy~\citep{devlin-etal-2019-bert,gonzalez2020comparing,choi2021evaluation}. 
+
+Essentially, a Transformer language model is a model that can predict words from a given set of context words. This approach starkly differs from the traditional view of human linguistic competence, believed to be based on innate structural properties and symbolic-based processing. How can these models, which do not inherently embody hierarchical structures or execute symbolic operations, achieve such proficiency? The complexity of these ``black-box" models, with millions or even trillions of parameters, makes it challenging to understand their inner workings. Their empirical success not only challenges these long-standing linguistic assumptions for language processing, but also prompts questions about the mechanisms underlying models' linguistic proficiency. One key question, which is also the focus of this thesis, is whether Transformers implicitly construct a form of abstract hierarchical representation. 
+
+\section{Research question and objectives} \label{sec:research_Q}
+
+The core research question we pose in this context is: \textbf{How do \ac{NLMs} represent syntactic structures: do they essentially leverage surface-level patterns to mimic human language, or do they also implicitly learn abstract rules?} 
+
+
+This question engages with a longstanding debate in computational linguistics about the essential role of hierarchical, rule-based structures in language processing. While Transformers have excelled in various NLP tasks, theoretical studies suggest that they are limited in their ability to represent context-free grammars that capture hierarchical structures~\citep{bhattamishra-etal-2020-ability,hahn:2020}. The empirical evidence, however, offers a more complex view. On the one hand, evidence suggests that Transformers can capture complex syntactic structures~\citep{goldberg19assessing,wolf2019some}, even mimic tree-like structures~\citep{jawahar-etal-2019-bert} and acquire structural biases from raw linguistic data~\citep{warstadt2020can}. On the other hand, some studies propose that these models may navigate structure-sensitive tasks by leveraging statistical regularities or heuristics in the training data~\citep{wei-etal-2021-frequency,sinha-etal-2021-masked,mccoy-etal-2019-right,da-costa-chaves-2020-assessing}. Additionally, the capacity for extensive memorization in these models is well recognized~\citep{halevy2009unreasonable,zhang2021understanding}, leading some to describe Transformer \ac{LMs} as ``stochastic parrots'' that primarily memorize and shallowly recombine observed examples~\citep{bender2021dangers}. 
+
+
+
+Given this divergence in existing research, coupled with the inherently opaque nature of Transformer models, it remains an open question whether they are capable of constructing abstract hierarchical representations and achieving a level of human-like syntactic generalization. The crux of the inquiry lies in understanding how these models arrive at their predictions. Do they abstract complex rules akin to human-like syntactic understanding, or do they exploit statistical regularities that just happen to align with human language structure? The distinction is subtle, but it has profound implications for both our understanding of these models and their practical applications. Our research aims to characterize the model's syntactic abstraction capacity by disentangling these potential strategies, providing nuanced insights into the underlying mechanisms. The study serves two main objectives: i) assessing the potential of an autoregressive Transformer language model as an explanatory tool for human syntactic processing; ii) improving the model's interpretability.
+
+
+\subsection{Feasibility as explanatory model for human language processing} 
+From both linguistic and cognitive science standpoints, studying the abstraction capabilities of neural language models is essential to understand how these models mirror or diverge from human linguistic cognition. It offers insights into whether these architectures can be considered analogs to human cognitive processes or just powerful pattern recognizers. Inspired by the research of ~\cite{hupkes2020hierarchy}, which confirmed the utility of recurrent neural language models as explanatory tools for human linguistic processing, we extend their foundational concepts to explore Transformer-based models, the current state-of-the-art. 
+The first objective of this dissertation is to assess whether Transformer-based language models can provide a feasible computational framework for
+human syntactic processes.
+
+Research has long probed the functional architecture of language in the brain through diverse techniques ranging from neuroimaging to behavioral experiments and computational modeling. Modern tools such as EEG, with high temporal but low spatial resolution, and fMRI, with high spatial but low temporal resolution, present challenges in studying the neural dynamics of linguistic behavior and cognition. Behavioral experiments, often involving small sets of artificial stimuli designed to be manageable for participants, may not capture the full complexity and variability of natural language. Furthermore, human subjects bring variability in terms of attention, fatigue, and motivation, which can introduce confounds into the experimental results. Both methodologies primarily offer a correlational view of brain activity, and more direct interventions, like neurosurgery or electrical stimulation, raise serious ethical concerns and may not be feasible in many cases, limiting causal inferences.
+
+In this context, neural networks present a compelling alternative for studying language processing, addressing many limitations inherent in traditional approaches. They enable large-scale experiments that can encompass the vast complexity and variability of natural language. Unlike human participants, models are free from confounds like fatigue and attention lapses, ensuring a controlled environment and consistent results. Crucially, these models allow for experimental manipulations to deduce causality without any ethical issues.
+
+The idea of using neural networks for modeling human language processing traces its roots back to the connectionist models of the 1980s~\citep{rumelhart1986parallel}. 
+Early models were often trained on limited datasets, covering only a narrow spectrum of linguistic phenomena~\citep{elman89representation}. Additionally, their architectures were generally simple and lacked computational resources to process large datasets or execute intricate language tasks. These constraints led to skepticism about their capability to capture the full complexity of human language, from syntax to semantics and beyond~\citep{pinker1988language,fodor1988connectionism,marcus1998rethinking}. In contrast, the emergence of Transformer-based language models has redefined the field. Rather than questioning if these models can capture human-like linguistic behavior, the focus has shifted to understanding how they achieve it. Their remarkable performance in a variety of \ac{NLP} tasks underscores their potential as explanatory tools for human language processing.
+
+
+To effectively serve as an explanatory framework for human language processing, a computational model must meet certain foundational criteria.
+These criteria, which we outline below, guide the model selection and experimental design of this dissertation.
+
+Our research focuses on the \textbf{autoregressive Transformer language model}~\citep{NIPS2017_3f5ee243}.\footnote{Autoregressive language model is also referred to as causal language model, we consistently use ``autoregressive'' in this dissertation.} This choice is motivated by the model's language modeling objective~(\S\ref{sec:nlms}), which aligns closely with the incremental word prediction characteristic of human language processing~\citep{hale2001probabilistic,lappin2022algebraic}. Such autoregressive language models are trained on vast amounts of text data, optimizing their weights to predict the next token based on the preceding tokens in a sequence. During language acquisition, humans are exposed to a large amount of data, and incremental word prediction plays a critical role in human language processing~\citep{landauer1997solution,hale2001probabilistic,kuperberg2016we,levy2008expectation} and more generally in cognition~\citep{bar2007proactive,clark2015surfing}. We believe that a model intended to shed light on human language processing should align with this critical aspect of language acquisition and usage.\footnote{ Incremental prediction is of course not the only task that humans undertake during language acquisition, designing and integrating more human-like learning tasks into computational models remains an active and open area of research.}
+
+\paragraph{Behavioral similarity} For a model to offer insight into human linguistic processing of a particular phenomenon, it must first demonstrate the ability to replicate human usage of that phenomenon. Given the impressive human-like textual outputs of recent autoregressive LMs~\citep{radford2019language,bubeck2023sparks}, it is clear that they possess a sophisticated capacity for general linguistic imitation. It remains to be seen whether they can capture more nuanced, structure-dependent phenomena. In this dissertation, our exploration centers on two pivotal facets of human language: hierarchical structure and compositionality. We aim to determine the extent to which Transformer-based models can behaviorally mimic these fundamental linguistic characteristics.
+
+
+\paragraph{Representational adequacy} While achieving behavioral imitation of syntactic phenomena is an essential prerequisite, it is not enough. For a model to shed light on human syntactic processing, it must capture the intricacies of linguistic structures, going beyond surface patterns or rote memorization, areas where they are known to excel~\citep{mccoy-etal-2019-right,kodner-gupta-2020-overestimation}. In this dissertation, we further probe the internal representation of Transformer-based models to assess whether they encode a form of abstract hierarchical structure and if these structures align with well-established linguistic theories. 
+
+
+
+\paragraph{Controllability and interpretability} 
+ 
+ Lastly, for a model to serve as an explanatory tool
+for a given linguistic phenomenon, it is essential that we have a certain understanding
+of its underlying workings in implementing this phenomenon. This understanding should
+allow us to exert a degree of control over the model’s behavior.
+ Symbolic models inherently offer this transparency due to their explicit symbolic representations and the deterministic nature of the rules governing them. However, neural networks, particularly those as complex as Transformers, operate as ``black boxes''. This obscurity has historically been a primary critique against neural networks as cognitive models~\citep{mccloskey1991networks}. 
+
+ 
+In light of these challenges, we aim to explore and develop techniques that can penetrate this obscurity, revealing the inner mechanisms that drive specific linguistic behaviors in these models. In addition, we seek to employ interpretability tools, such as causal interventions, to identify and potentially influence the network components responsible for particular linguistic behaviors. While the vast number of parameters in these models makes complete control and interpretation challenging, our efforts seek to offer a degree of control that enables targeted manipulation and understanding of the models' decision-making processes.
+
+
+\subsection{Improving model interpretability} 
+From a machine learning perspective, understanding what models know and how they know it, especially in relation to linguistic structures, is a prerequisite to improve these systems towards more interpretable and robust models. %~\citep{marasovic2018nlp,sajjad2022neuron}. 
+For instance, probing for the linguistic structure in models has been shown to be important in understanding their ability to adapt to new, unseen data~\citep{marasovic2018nlp}. Delving into the syntactic abstraction capacity of these models offers a dual advantage: it provides insight into the nature of the representations they form and the factors driving their success, while also exposing their inherent limitations, which could help guide the creation of more effective architectures~\citep{lake2017building,marcus2018deep}.
+
+Although Transformer-based models have achieved, and in some tasks surpassed, human-level performance in various fields~\citep{otter2020survey,lertvittayakumjorn2021explanation,khurana2023natural}, they often exhibit fragility and their failures are distinctly unhumanlike~\citep{firestone2020performance}. For example, they can be derailed by minor input perturbations that humans easily handle~\citep{firestone2020performance,wang2022bert}; models capable of generating human-like coherent text struggle with parsing moderately complex recursive structures~\citep{yao-koller-2022-structural}. This raises concerns about the robustness and generalization capacity of Transformers models to less frequent patterns. Recognizing these challenges, researchers have sought to enhance neural networks using human linguistic biases. For example, integrating hierarchical structures as inductive bias into neural models has demonstrated improved efficiency in learning phenomena sensitive to structure~\citep{kuncoro-etal-2018-lstms,wilcox-etal-2019-structural,qian-etal-2021-structural}. Similarly, integrating compositional structure biases can significantly boost a model's out-of-distribution compositional generalization~\citep{qiu-etal-2022-improving}. These linguistically motivated enhancements, driven by insights into model limitations, aim to enable faster and more robust learning~\citep{lake2017building,besold2017neuralsymbolic}, marking a promising research avenue.
+
+With this backdrop, the second objective of this dissertation is to develop a linguistically-informed analysis framework. This framework combines and enhances current interpretability techniques, positioning challenge sets, probing classifiers, and causal analysis within an integrated epistemological structure. Its primary goal is to elucidate the underlying mechanisms that drive the linguistic behaviors of models, particularly in relation to syntactic structures. Additionally, it seeks to identify potential limitations in models' syntactic processing. This framework can serve as an analytic tool to measure progress and guide future improvements in these domains.
+
+
+\section{Contributions}
+This dissertation seeks to improve the understanding of Transformer-based models and evaluate the potential of autoregressive Transformer language models as explanatory models for human syntactic processing. Our exploration spans two abstraction levels within NLMs: 
+
+\subsection{Assessing model capacity to represent syntactic structures}
+To better understand how Transformer language models represent hierarchical linguistic structures, we examine two superficially similar long-distance relationships --- subject-verb and object-past participle agreements. Our contributions in this domain are multifaceted:
+
+\textbf{Heuristic-based evaluation protocol} To distinguish between deep structural patterns and surface-level heuristics inherent in language, we introduce a novel heuristic-based evaluation protocol~(\S\ref{sec:h_eval_protocol}). Our protocol uses a tiered evaluation system that emphasizes results from the most abstract cases. This protocol lays the groundwork for the development of model interpretation techniques in this dissertation and can also be instrumental in guiding linguistic experiments probing human syntactic capabilities.
+
+\textbf{Linguistically-informed analysis framework} We introduced an integrated analysis framework that merges and expands upon recent interpretability techniques with a linguistic lens. At its heart, this framework examines two syntactic phenomena that, while outwardly similar, possess distinct linguistic modeling. We probe whether Transformer-based models can form distinct representations aligned with established linguistic analysis. Spanning behavioral assessments, representational probing, and functional analysis of inner mechanisms, our framework offers a comprehensive template for testing linguistic or cognitive hypotheses with computational models. 
+
+
+\textbf{Dataset creation} We created two challenge sets from naturalistic corpora: one for subject-verb agreement across relative clauses (27,582 sentences) and another for object-past participle agreement (68,794 sentences) in French. Instead of the common English-centric, template-generated methods in existing literature~\citeti{marvin-linzen-2018-targeted,warstadt-etal-2019-neural}, our sets emphasize the intricacies and diversity of natural language, ensuring ecological validity.  
+
+\textbf{Pretrained model development} We pre-trained three word-based French neural language models: an LSTM network, an autoregressive Transformer, and a masked Transformer LM, tailored for linguistic experiments.  In contrast to the widespread use of sub-word-based models such as BERT~\citep{devlin-etal-2019-bert} or OpenAI's GPT2~\citep{radford2019language}, our word-based models simplify linguistic experiments by avoiding sub-word intricacies.\footnote{Previous studies often used sub-word-based pretrained models, which necessitate constraints such as filtering evaluation sentences based on target-word appearances as single word pieces~\citep{goldberg19assessing} or computing joint probabilities of sub-word sequences~\citep{wolf2019some}.} Our pre-trained models can be readily used for other linguistic experiments.
+
+
+\subsection{Assessing model capacity to generalize compositionally observed structures }
+
+Our investigation not only evaluates NLMs' ability to represent syntactic structures but also delves into their capacity for compositional structural generalization. We examine whether Transformer-based models rely on syntactic generalization that aligns with human inductive biases to interpret new, unseen linguistic patterns effectively.
+
+Many existing benchmarks, such as SCAN~\citep{lake2018generalization} and COGS~\citep{kim-linzen-2020-cogs}, predominantly address \textit{lexical generalization} --- interpreting novel combinations of known lexical items and known linguistic structures, \textit{structural generalization} tasks, where a model needs to combine known structures into a novel structure, are often underrepresented. To provide a more comprehensive perspective on the syntactic generalization capabilities of NLMs, we extend COGS to a compositional challenge set targeting structural generalization, covering syntactic elements like recursion and filler-gap dependencies.
+
+Using our challenge set, we assess various Transformers models as well as a symbolic parser. Our findings underscore the specific limitations inherent to each architecture, highlighting areas of potential improvement. Furthermore, the findings provide a nuanced perspective on Transformers' abilities to make grammar-based generalizations. While these models can approximate compositional behavior to some degree, they don't seem to rely on the kind of syntactic generalization rooted in systematic compositional rules. 
+
+
+
+\subsection{Publications}
+
+ The research presented in this dissertation includes contributions that have been previously published and presented at conferences:
+ \begin{itemize}[itemsep=0.6pt]
+     \item Section~\ref{sec:heuristics} elaborates on an article published at \textsc{EMNLP}~\citep{li-etal-2021-transformers}.
+     \item Section~\ref{sec:probing_location} builds on articles published at~\textsc{ACL}~\citep{li-etal-2022-distributed} and \textsc{TALN}~\citep{li-etal-2022-les}.
+     \item Section~\ref{sec:causal} expands upon an article published in the journal TACL~\citep{li-etal-2023-assessing}
+     \item Section~\ref{sec:word_order_NA} presents entirely new, unpublished research.
+     \item Chapter~\ref{chp:slog} is an expanded version of an article accepted by EMNLP~\citep{li2023slog}. 
+ \end{itemize}
+
+
+ For transparency and further research, all datasets we created, models we pretrained, and all associated code from this dissertation have been made publicly available in the repositories provided below:  
+ \begin{itemize}[itemsep=0.6pt]
+     \item \url{https://gitlab.huma-num.fr/bli/syntactic-ability-nlm}
+     \item \url{https://gitlab.huma-num.fr/bli/syntactic-info-distribution}
+     \item \url{https://github.com/bingzhilee/contrastive_analysis}
+     \item \url{https://github.com/bingzhilee/SLOG}
+ \end{itemize}
+
+
+\section{Outline}
+This dissertation consists of two main parts, each examining a different aspect of syntactic abstraction within neural language models. Chapter~\ref{chp:main_project} assesses the extent to which the Transformer language model captures hierarchical structures, and Chapter~\ref{chp:slog} explores the capability of such models to compositionally generalize observed structures. 
+Before the main parts, Chapter~\ref{chp:background} provides essential background knowledge and highlights recent methodologies in the literature for analyzing the representation of linguistic structures in NLMs. Additionally, Chapter~\ref{chp:NA_tasks} offers a review of key studies that use long-distance agreement tasks as a tool for gauging NLM's syntactic capabilities.
+
+\noindent \textbf{Part 1 }  Chapter~\ref{chp:main_project} introduces a three-tier epistemological framework for a contrastive study of Transformer LM's ability to represent syntactic structures. Our experiments specifically probe the model's capacity to represent long-distance relationships, indicative of hierarchical structure understanding. We use long-distance subject-verb agreement and object past-participle agreement in French as case studies and employ ecological training and evaluation data. 
+This framework unfolds in a sequential manner, where each level of analysis builds upon the findings of the previous one.
+
+
+\vspace{-0.8\baselineskip}
+\begin{itemize}
+    \item \textbf{Behavioral level} (Challenge sets): The foundational layer of our contrastive study is rooted in behavioral assessment. In section~\ref{sec:heuristics}, we introduce a novel heuristic-based evaluation protocol to mitigate task-related confounds. Using this protocol, we assess the Transformer LM's syntactic awareness through number agreement tasks. The robust performance of the model indicates its ability to capture substantial syntactic information, moving beyond mere surface heuristics. This underscores its ability to meet the behavioral-level prerequisite for genuine syntactic generalization.
+
+    \item \textbf{Representational level} (linguistic probes): Building upon the empirical findings, the next phase shifts to the model's internal representations. If the model excels in syntactic tests, it stands to reason that it encodes this syntactic information within its internal representations. The section~\ref{sec:probing_location} seeks to uncover where this syntactic information is encoded, moving from mere performance outcomes to the intricacies of internal encoding.
+    \item \textbf{Functional level} (Causal intervention): The final level delves into causality. Simply detecting syntactic information in a model's representations does not guarantee that the model actively uses it. 
+    In section~\ref{sec:causal} and section~\ref{sec:word_order_NA}, we use causal interventions to determine which components with relevant structural information actively influence the model's behavior during syntactic tasks.
+\end{itemize}
+
+ 
+\noindent \textbf{Part 2 }  In Chapter~\ref{chp:slog}, we develop a challenge test designed to evaluate compositional structural generalization. Using this test, we evaluate various Transformer-based models and a structure-informed parsing model. 
+This test, crafted using a template-based synthetic data approach,  operates within a semantic parsing framework. The models are tasked with
+translating English sentences into logic-based meaning representations. There is a systematic shift between training and evaluation sets: the constructions in the evaluation set differ structurally from the training set, but can be interpreted by rearranging components present within the training data. For example, in the training set, \ac{RC} modify \ac{NP} only in object positions, as in ``Jimmy saw \textbf{the cat that the man held}''. The test challenges models with RCs modifying NPs in the subject position, like ``\textbf{The cat that Emma saw} ran''. This study extends beyond the scope of Chapter~\ref{chp:main_project}, which focused on representing hierarchical structures. Instead, it examines the genuine syntactic generalization akin to what symbolic compositional rules would support.   
+
+
+
+
